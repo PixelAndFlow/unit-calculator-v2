@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Glass Unit Converter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-primary: #07050d;
+      --bg-secondary: #12091f;
+      --glass-bg: rgba(26, 14, 45, 0.62);
+      --glass-bg-strong: rgba(32, 16, 58, 0.78);
+      --glass-border: rgba(176, 106, 255, 0.28);
+      --glass-highlight: rgba(176, 106, 255, 0.14);
+      --text-primary: #f4ecff;
+      --text-secondary: #bca7dc;
+      --text-muted: #7d6a99;
+      --input-bg: rgba(11, 6, 22, 0.74);
+      --purple-primary: #9d4edd;
+      --purple-light: #c77dff;
+      --purple-dark: #5a189a;
+      --success: #7bf1a8;
+      --warning: #ffd166;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+      --glow: 0 0 32px rgba(157, 78, 221, 0.22);
+    }
+
+    body.light-mode {
+      --bg-primary: #f6f0ff;
+      --bg-secondary: #eadcff;
+      --glass-bg: rgba(255, 255, 255, 0.68);
+      --glass-bg-strong: rgba(255, 255, 255, 0.86);
+      --glass-border: rgba(123, 31, 162, 0.25);
+      --glass-highlight: rgba(123, 31, 162, 0.08);
+      --text-primary: #1b1028;
+      --text-secondary: #5e4778;
+      --text-muted: #8a78a1;
+      --input-bg: rgba(255, 255, 255, 0.82);
+      --purple-primary: #7b2cbf;
+      --purple-light: #9d4edd;
+      --purple-dark: #4c1177;
+      --success: #188a45;
+      --warning: #9a6700;
+      --shadow: 0 24px 70px rgba(72, 35, 112, 0.18);
+      --glow: 0 0 30px rgba(123, 44, 191, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(157, 78, 221, 0.28), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(90, 24, 154, 0.22), transparent 38%),
+        linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      transition: background 0.35s ease, color 0.35s ease;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    .theme-btn,
+    .copy-btn,
+    .direction-btn,
+    .copy-mode-btn {
+      border: 1px solid var(--glass-border);
+      background: var(--glass-bg);
+      color: var(--text-primary);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .theme-btn {
+      padding: 10px 16px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      box-shadow: var(--glow);
+    }
+
+    .theme-btn:hover,
+    .copy-btn:hover,
+    .direction-btn:hover,
+    .copy-mode-btn:hover {
+      transform: translateY(-1px);
+      border-color: var(--purple-light);
+      background: var(--glass-highlight);
+    }
+
+    .app-shell {
+      width: min(960px, 100%);
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      color: var(--purple-light);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: clamp(2.1rem, 6vw, 4.1rem);
+      line-height: 0.95;
+      letter-spacing: -0.06em;
+      margin-bottom: 18px;
+    }
+
+    .hero p {
+      color: var(--text-secondary);
+      max-width: 650px;
+      margin: 0 auto;
+      line-height: 1.65;
+      font-size: 1rem;
+    }
+
+    .converter-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .converter-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--glass-border);
+      background: linear-gradient(145deg, var(--glass-bg), rgba(255, 255, 255, 0.03));
+      border-radius: 28px;
+      padding: 24px;
+      box-shadow: var(--shadow), var(--glow);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+    }
+
+    .converter-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.13), transparent 36%);
+      pointer-events: none;
+    }
+
+    .card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .card-title h2 {
+      font-size: 1.35rem;
+      letter-spacing: -0.03em;
+      margin-bottom: 6px;
+    }
+
+    .card-title p {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .status-pill {
+      white-space: nowrap;
+      color: var(--purple-light);
+      border: 1px solid var(--glass-border);
+      background: var(--glass-highlight);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .direction-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .direction-btn {
+      padding: 12px 14px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .direction-btn.active {
+      color: white;
+      background: linear-gradient(135deg, var(--purple-primary), var(--purple-dark));
+      border-color: rgba(255, 255, 255, 0.28);
+      box-shadow: 0 0 26px rgba(157, 78, 221, 0.36);
+    }
+
+    .fields {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .field-group {
+      border: 1px solid transparent;
+      border-radius: 20px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.035);
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .field-group.active-input {
+      border-color: var(--purple-light);
+      background: var(--glass-highlight);
+    }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .active-label {
+      color: var(--success);
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid var(--glass-border);
+      outline: none;
+      background: var(--input-bg);
+      color: var(--text-primary);
+      border-radius: 16px;
+      padding: 15px 16px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    input:focus {
+      border-color: var(--purple-light);
+      box-shadow: 0 0 0 4px rgba(157, 78, 221, 0.14);
+    }
+
+    input[readonly] {
+      color: var(--text-secondary);
+    }
+
+    .copy-panel {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding-top: 4px;
+    }
+
+    .copy-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .copy-options span {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-right: 2px;
+    }
+
+    .copy-mode-btn {
+      padding: 8px 12px;
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .copy-mode-btn.active {
+      color: white;
+      background: var(--purple-primary);
+      border-color: transparent;
+    }
+
+    .copy-btn {
+      width: 100%;
+      padding: 13px 16px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      background: var(--glass-bg-strong);
+    }
+
+    .copy-btn.copied {
+      color: #06120a;
+      background: var(--success);
+      border-color: var(--success);
+      transform: scale(0.99);
+    }
+
+    .hint {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      line-height: 1.5;
+      margin-top: 14px;
+      text-align: center;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 86px 16px 24px;
+        align-items: flex-start;
+      }
+
+      .theme-toggle {
+        top: 14px;
+        right: 14px;
+      }
+
+      .converter-card {
+        padding: 18px;
+        border-radius: 22px;
+      }
+
+      .card-header {
+        flex-direction: column;
+      }
+
+      .status-pill {
+        white-space: normal;
+      }
+
+      .direction-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="theme-toggle">
+    <button class="theme-btn" id="themeToggle" type="button" aria-label="Toggle light and dark mode">☾ Dark Mode</button>
+  </div>
+
+  <main class="app-shell">
+    <section class="hero" aria-labelledby="pageTitle">
+      <div class="eyebrow">Real-Time Conversion Tool</div>
+      <h1 id="pageTitle">Glass Unit Converter</h1>
+      <p>Convert distance and temperature in either direction. Choose a direction, type into the active field, and copy either the result number or the full result with units.</p>
+    </section>
+
+    <section class="converter-grid" aria-label="Unit converters">
+      <article class="converter-card" data-converter="distance">
+        <div class="card-inner">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>Distance</h2>
+              <p>Convert kilometers to miles or miles to kilometers.</p>
+            </div>
+            <div class="status-pill" id="distanceStatus">Kilometers → Miles selected</div>
+          </div>
+
+          <div class="direction-row" role="group" aria-label="Distance conversion direction">
+            <button class="direction-btn active" type="button" data-direction="kmToMiles">Kilometers → Miles</button>
+            <button class="direction-btn" type="button" data-direction="milesToKm">Miles → Kilometers</button>
+          </div>
+
+          <div class="fields">
+            <div class="field-group active-input" data-field-wrapper="km">
+              <label for="kilometers">
+                <span id="kmLabel">Kilometers input</span>
+                <span class="active-label" id="kmActive">Current input</span>
+              </label>
+              <input id="kilometers" type="number" inputmode="decimal" placeholder="Enter kilometers" />
+            </div>
+
+            <div class="field-group" data-field-wrapper="miles">
+              <label for="miles">
+                <span id="milesLabel">Miles result</span>
+                <span class="active-label" id="milesActive" hidden>Current input</span>
+              </label>
+              <input id="miles" type="number" inputmode="decimal" placeholder="Miles result" readonly />
+            </div>
+          </div>
+
+          <div class="copy-panel">
+            <div class="copy-options" role="group" aria-label="Distance copy format">
+              <span>Copy format:</span>
+              <button class="copy-mode-btn active" type="button" data-copy-scope="distance" data-copy-mode="number">Number only</button>
+              <button class="copy-mode-btn" type="button" data-copy-scope="distance" data-copy-mode="full">Full result + units</button>
+            </div>
+            <button class="copy-btn" type="button" data-copy-target="distance">Copy Distance Result</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="converter-card" data-converter="temperature">
+        <div class="card-inner">
+          <div class="card-header">
+            <div class="card-title">
+              <h2>Temperature</h2>
+              <p>Convert Fahrenheit to Celsius or Celsius to Fahrenheit.</p>
+            </div>
+            <div class="status-pill" id="temperatureStatus">Fahrenheit → Celsius selected</div>
+          </div>
+
+          <div class="direction-row" role="group" aria-label="Temperature conversion direction">
+            <button class="direction-btn active" type="button" data-direction="fahrenheitToCelsius">Fahrenheit → Celsius</button>
+            <button class="direction-btn" type="button" data-direction="celsiusToFahrenheit">Celsius → Fahrenheit</button>
+          </div>
+
+          <div class="fields">
+            <div class="field-group active-input" data-field-wrapper="fahrenheit">
+              <label for="fahrenheit">
+                <span id="fahrenheitLabel">Fahrenheit input</span>
+                <span class="active-label" id="fahrenheitActive">Current input</span>
+              </label>
+              <input id="fahrenheit" type="number" inputmode="decimal" placeholder="Enter Fahrenheit" />
+            </div>
+
+            <div class="field-group" data-field-wrapper="celsius">
+              <label for="celsius">
+                <span id="celsiusLabel">Celsius result</span>
+                <span class="active-label" id="celsiusActive" hidden>Current input</span>
+              </label>
+              <input id="celsius" type="number" inputmode="decimal" placeholder="Celsius result" readonly />
+            </div>
+          </div>
+
+          <div class="copy-panel">
+            <div class="copy-options" role="group" aria-label="Temperature copy format">
+              <span>Copy format:</span>
+              <button class="copy-mode-btn active" type="button" data-copy-scope="temperature" data-copy-mode="number">Number only</button>
+              <button class="copy-mode-btn" type="button" data-copy-scope="temperature" data-copy-mode="full">Full result + units</button>
+            </div>
+            <button class="copy-btn" type="button" data-copy-target="temperature">Copy Temperature Result</button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <p class="hint">Tip: direction buttons also move the cursor into the selected input field.</p>
+  </main>
+
+  <script>
+    const state = {
+      distanceDirection: "kmToMiles",
+      temperatureDirection: "fahrenheitToCelsius",
+      distanceCopyMode: "number",
+      temperatureCopyMode: "number",
+    };
+
+    const elements = {
+      themeToggle: document.getElementById("themeToggle"),
+      kilometers: document.getElementById("kilometers"),
+      miles: document.getElementById("miles"),
+      fahrenheit: document.getElementById("fahrenheit"),
+      celsius: document.getElementById("celsius"),
+      distanceStatus: document.getElementById("distanceStatus"),
+      temperatureStatus: document.getElementById("temperatureStatus"),
+      kmLabel: document.getElementById("kmLabel"),
+      milesLabel: document.getElementById("milesLabel"),
+      fahrenheitLabel: document.getElementById("fahrenheitLabel"),
+      celsiusLabel: document.getElementById("celsiusLabel"),
+      kmActive: document.getElementById("kmActive"),
+      milesActive: document.getElementById("milesActive"),
+      fahrenheitActive: document.getElementById("fahrenheitActive"),
+      celsiusActive: document.getElementById("celsiusActive"),
+    };
+
+    const KM_TO_MILES = 0.621371;
+    const MILES_TO_KM = 1.609344;
+
+    function formatResult(value) {
+      if (!Number.isFinite(value)) return "";
+      return Number.parseFloat(value.toFixed(8)).toString();
+    }
+
+    function setFieldMode(inputElement, isInput) {
+      inputElement.readOnly = !isInput;
+      if (!isInput) {
+        inputElement.setAttribute("aria-readonly", "true");
+      } else {
+        inputElement.removeAttribute("aria-readonly");
+      }
+    }
+
+    function setActiveWrapper(converterType, activeName) {
+      document
+        .querySelectorAll(`[data-converter="${converterType}"] [data-field-wrapper]`)
+        .forEach((wrapper) => {
+          wrapper.classList.toggle("active-input", wrapper.dataset.fieldWrapper === activeName);
+        });
+    }
+
+    function updateDirectionButtons(converterType, activeDirection) {
+      document
+        .querySelectorAll(`[data-converter="${converterType}"] .direction-btn`)
+        .forEach((button) => {
+          button.classList.toggle("active", button.dataset.direction === activeDirection);
+        });
+    }
+
+    function convertDistance() {
+      if (state.distanceDirection === "kmToMiles") {
+        const km = Number.parseFloat(elements.kilometers.value);
+        elements.miles.value = elements.kilometers.value === "" ? "" : formatResult(km * KM_TO_MILES);
+      } else {
+        const miles = Number.parseFloat(elements.miles.value);
+        elements.kilometers.value = elements.miles.value === "" ? "" : formatResult(miles * MILES_TO_KM);
+      }
+    }
+
+    function convertTemperature() {
+      if (state.temperatureDirection === "fahrenheitToCelsius") {
+        const fahrenheit = Number.parseFloat(elements.fahrenheit.value);
+        elements.celsius.value = elements.fahrenheit.value === "" ? "" : formatResult((fahrenheit - 32) * 5 / 9);
+      } else {
+        const celsius = Number.parseFloat(elements.celsius.value);
+        elements.fahrenheit.value = elements.celsius.value === "" ? "" : formatResult((celsius * 9 / 5) + 32);
+      }
+    }
+
+    function setDistanceDirection(direction) {
+      state.distanceDirection = direction;
+      updateDirectionButtons("distance", direction);
+
+      if (direction === "kmToMiles") {
+        setFieldMode(elements.kilometers, true);
+        setFieldMode(elements.miles, false);
+        setActiveWrapper("distance", "km");
+        elements.kmLabel.textContent = "Kilometers input";
+        elements.milesLabel.textContent = "Miles result";
+        elements.kmActive.hidden = false;
+        elements.milesActive.hidden = true;
+        elements.distanceStatus.textContent = "Kilometers → Miles selected";
+        convertDistance();
+        elements.kilometers.focus();
+      } else {
+        setFieldMode(elements.kilometers, false);
+        setFieldMode(elements.miles, true);
+        setActiveWrapper("distance", "miles");
+        elements.kmLabel.textContent = "Kilometers result";
+        elements.milesLabel.textContent = "Miles input";
+        elements.kmActive.hidden = true;
+        elements.milesActive.hidden = false;
+        elements.distanceStatus.textContent = "Miles → Kilometers selected";
+        convertDistance();
+        elements.miles.focus();
+      }
+    }
+
+    function setTemperatureDirection(direction) {
+      state.temperatureDirection = direction;
+      updateDirectionButtons("temperature", direction);
+
+      if (direction === "fahrenheitToCelsius") {
+        setFieldMode(elements.fahrenheit, true);
+        setFieldMode(elements.celsius, false);
+        setActiveWrapper("temperature", "fahrenheit");
+        elements.fahrenheitLabel.textContent = "Fahrenheit input";
+        elements.celsiusLabel.textContent = "Celsius result";
+        elements.fahrenheitActive.hidden = false;
+        elements.celsiusActive.hidden = true;
+        elements.temperatureStatus.textContent = "Fahrenheit → Celsius selected";
+        convertTemperature();
+        elements.fahrenheit.focus();
+      } else {
+        setFieldMode(elements.fahrenheit, false);
+        setFieldMode(elements.celsius, true);
+        setActiveWrapper("temperature", "celsius");
+        elements.fahrenheitLabel.textContent = "Fahrenheit result";
+        elements.celsiusLabel.textContent = "Celsius input";
+        elements.fahrenheitActive.hidden = true;
+        elements.celsiusActive.hidden = false;
+        elements.temperatureStatus.textContent = "Celsius → Fahrenheit selected";
+        convertTemperature();
+        elements.celsius.focus();
+      }
+    }
+
+    function getCopyText(type) {
+      if (type === "distance") {
+        const resultValue = state.distanceDirection === "kmToMiles" ? elements.miles.value : elements.kilometers.value;
+        const unit = state.distanceDirection === "kmToMiles" ? "miles" : "kilometers";
+        if (!resultValue) return "";
+        return state.distanceCopyMode === "number" ? resultValue : `${resultValue} ${unit}`;
+      }
+
+      const resultValue = state.temperatureDirection === "fahrenheitToCelsius" ? elements.celsius.value : elements.fahrenheit.value;
+      const unit = state.temperatureDirection === "fahrenheitToCelsius" ? "°C" : "°F";
+      if (!resultValue) return "";
+      return state.temperatureCopyMode === "number" ? resultValue : `${resultValue}${unit}`;
+    }
+
+    async function copyResult(button, type) {
+      const originalText = button.textContent;
+      const textToCopy = getCopyText(type);
+
+      if (!textToCopy) {
+        button.textContent = "Nothing to copy";
+        button.classList.add("copied");
+        setTimeout(() => {
+          button.textContent = originalText;
+          button.classList.remove("copied");
+        }, 1100);
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(textToCopy);
+        button.textContent = "Copied!";
+      } catch (error) {
+        const fallback = document.createElement("textarea");
+        fallback.value = textToCopy;
+        document.body.appendChild(fallback);
+        fallback.select();
+        document.execCommand("copy");
+        document.body.removeChild(fallback);
+        button.textContent = "Copied!";
+      }
+
+      button.classList.add("copied");
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.classList.remove("copied");
+      }, 1200);
+    }
+
+    function setCopyMode(scope, mode) {
+      if (scope === "distance") {
+        state.distanceCopyMode = mode;
+      } else {
+        state.temperatureCopyMode = mode;
+      }
+
+      document
+        .querySelectorAll(`[data-copy-scope="${scope}"]`)
+        .forEach((button) => {
+          button.classList.toggle("active", button.dataset.copyMode === mode);
+        });
+    }
+
+    elements.themeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("light-mode");
+      const isLight = document.body.classList.contains("light-mode");
+      elements.themeToggle.textContent = isLight ? "☀ Light Mode" : "☾ Dark Mode";
+    });
+
+    document.querySelectorAll(".direction-btn").forEach((button) => {
+      button.addEventListener("click", () => {
+        const direction = button.dataset.direction;
+        if (direction === "kmToMiles" || direction === "milesToKm") {
+          setDistanceDirection(direction);
+        } else {
+          setTemperatureDirection(direction);
+        }
+      });
+    });
+
+    elements.kilometers.addEventListener("input", convertDistance);
+    elements.miles.addEventListener("input", convertDistance);
+    elements.fahrenheit.addEventListener("input", convertTemperature);
+    elements.celsius.addEventListener("input", convertTemperature);
+
+    document.querySelectorAll(".copy-mode-btn").forEach((button) => {
+      button.addEventListener("click", () => {
+        setCopyMode(button.dataset.copyScope, button.dataset.copyMode);
+      });
+    });
+
+    document.querySelectorAll(".copy-btn").forEach((button) => {
+      button.addEventListener("click", () => {
+        copyResult(button, button.dataset.copyTarget);
+      });
+    });
+
+    setDistanceDirection("kmToMiles");
+    setTemperatureDirection("fahrenheitToCelsius");
+  </script>
+</body>
+</html>
