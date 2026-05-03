@@ -23,7 +23,6 @@
       --purple-light: #c77dff;
       --purple-dark: #5a189a;
       --success: #7bf1a8;
-      --warning: #ffd166;
       --shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
       --glow: 0 0 32px rgba(157, 78, 221, 0.22);
     }
@@ -43,16 +42,11 @@
       --purple-light: #9d4edd;
       --purple-dark: #4c1177;
       --success: #188a45;
-      --warning: #9a6700;
       --shadow: 0 24px 70px rgba(72, 35, 112, 0.18);
       --glow: 0 0 30px rgba(123, 44, 191, 0.18);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       min-height: 100vh;
@@ -69,21 +63,10 @@
       transition: background 0.35s ease, color 0.35s ease;
     }
 
-    .theme-toggle {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 10;
-    }
+    .theme-toggle { position: fixed; top: 20px; right: 20px; z-index: 10; }
+    button { font-family: inherit; }
 
-    button {
-      font-family: inherit;
-    }
-
-    .theme-btn,
-    .copy-btn,
-    .direction-btn,
-    .copy-mode-btn {
+    .theme-btn, .copy-btn, .direction-btn, .copy-mode-btn {
       border: 1px solid var(--glass-border);
       background: var(--glass-bg);
       color: var(--text-primary);
@@ -94,60 +77,20 @@
       -webkit-backdrop-filter: blur(14px);
     }
 
-    .theme-btn {
-      padding: 10px 16px;
-      font-size: 0.84rem;
-      font-weight: 600;
-      box-shadow: var(--glow);
-    }
-
-    .theme-btn:hover,
-    .copy-btn:hover,
-    .direction-btn:hover,
-    .copy-mode-btn:hover {
+    .theme-btn { padding: 10px 16px; font-size: 0.84rem; font-weight: 600; box-shadow: var(--glow); }
+    .theme-btn:hover, .copy-btn:hover, .direction-btn:hover, .copy-mode-btn:hover {
       transform: translateY(-1px);
       border-color: var(--purple-light);
       background: var(--glass-highlight);
     }
 
-    .app-shell {
-      width: min(960px, 100%);
-    }
+    .app-shell { width: min(960px, 100%); }
+    .hero { text-align: center; margin-bottom: 28px; }
+    .eyebrow { color: var(--purple-light); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 12px; }
+    h1 { font-size: clamp(2.1rem, 6vw, 4.1rem); line-height: 0.95; letter-spacing: -0.06em; margin-bottom: 18px; }
+    .hero p { color: var(--text-secondary); max-width: 650px; margin: 0 auto; line-height: 1.65; font-size: 1rem; }
 
-    .hero {
-      text-align: center;
-      margin-bottom: 28px;
-    }
-
-    .eyebrow {
-      color: var(--purple-light);
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    h1 {
-      font-size: clamp(2.1rem, 6vw, 4.1rem);
-      line-height: 0.95;
-      letter-spacing: -0.06em;
-      margin-bottom: 18px;
-    }
-
-    .hero p {
-      color: var(--text-secondary);
-      max-width: 650px;
-      margin: 0 auto;
-      line-height: 1.65;
-      font-size: 1rem;
-    }
-
-    .converter-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
-    }
+    .converter-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
 
     .converter-card {
       position: relative;
@@ -169,98 +112,22 @@
       pointer-events: none;
     }
 
-    .card-inner {
-      position: relative;
-      z-index: 1;
-    }
+    .card-inner { position: relative; z-index: 1; }
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+    .card-title h2 { font-size: 1.35rem; letter-spacing: -0.03em; margin-bottom: 6px; }
+    .card-title p { color: var(--text-secondary); font-size: 0.92rem; line-height: 1.5; }
+    .status-pill { white-space: nowrap; color: var(--purple-light); border: 1px solid var(--glass-border); background: var(--glass-highlight); padding: 8px 12px; border-radius: 999px; font-size: 0.76rem; font-weight: 700; }
 
-    .card-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
+    .direction-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
+    .direction-btn { padding: 12px 14px; font-size: 0.9rem; font-weight: 700; color: var(--text-secondary); }
+    .direction-btn.active { color: white; background: linear-gradient(135deg, var(--purple-primary), var(--purple-dark)); border-color: rgba(255, 255, 255, 0.28); box-shadow: 0 0 26px rgba(157, 78, 221, 0.36); }
 
-    .card-title h2 {
-      font-size: 1.35rem;
-      letter-spacing: -0.03em;
-      margin-bottom: 6px;
-    }
+    .fields { display: grid; grid-template-columns: 1fr; gap: 14px; margin-bottom: 16px; }
+    .field-group { border: 1px solid transparent; border-radius: 20px; padding: 12px; background: rgba(255, 255, 255, 0.035); transition: border-color 0.2s ease, background 0.2s ease; }
+    .field-group.active-input { border-color: var(--purple-light); background: var(--glass-highlight); }
 
-    .card-title p {
-      color: var(--text-secondary);
-      font-size: 0.92rem;
-      line-height: 1.5;
-    }
-
-    .status-pill {
-      white-space: nowrap;
-      color: var(--purple-light);
-      border: 1px solid var(--glass-border);
-      background: var(--glass-highlight);
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 0.76rem;
-      font-weight: 700;
-    }
-
-    .direction-row {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .direction-btn {
-      padding: 12px 14px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--text-secondary);
-    }
-
-    .direction-btn.active {
-      color: white;
-      background: linear-gradient(135deg, var(--purple-primary), var(--purple-dark));
-      border-color: rgba(255, 255, 255, 0.28);
-      box-shadow: 0 0 26px rgba(157, 78, 221, 0.36);
-    }
-
-    .fields {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
-      margin-bottom: 16px;
-    }
-
-    .field-group {
-      border: 1px solid transparent;
-      border-radius: 20px;
-      padding: 12px;
-      background: rgba(255, 255, 255, 0.035);
-      transition: border-color 0.2s ease, background 0.2s ease;
-    }
-
-    .field-group.active-input {
-      border-color: var(--purple-light);
-      background: var(--glass-highlight);
-    }
-
-    label {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      color: var(--text-secondary);
-      font-size: 0.82rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .active-label {
-      color: var(--success);
-      font-size: 0.74rem;
-      font-weight: 700;
-    }
+    label { display: flex; justify-content: space-between; gap: 12px; color: var(--text-secondary); font-size: 0.82rem; font-weight: 700; margin-bottom: 8px; }
+    .active-label { color: var(--success); font-size: 0.74rem; font-weight: 700; }
 
     input {
       width: 100%;
@@ -275,115 +142,60 @@
       transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
     }
 
-    input:focus {
-      border-color: var(--purple-light);
-      box-shadow: 0 0 0 4px rgba(157, 78, 221, 0.14);
-    }
+    input:focus { border-color: var(--purple-light); box-shadow: 0 0 0 4px rgba(157, 78, 221, 0.14); }
+    input[readonly] { color: var(--text-secondary); }
 
-    input[readonly] {
-      color: var(--text-secondary);
-    }
-
-    .copy-panel {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      padding-top: 4px;
-    }
-
-    .copy-options {
+    .copy-panel { display: grid; grid-template-columns: 1fr; gap: 12px; padding-top: 4px; }
+    .copy-preview {
+      min-height: 48px;
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
       align-items: center;
-    }
-
-    .copy-options span {
-      color: var(--text-muted);
-      font-size: 0.78rem;
-      font-weight: 700;
-      margin-right: 2px;
-    }
-
-    .copy-mode-btn {
-      padding: 8px 12px;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.04);
       color: var(--text-secondary);
-      font-size: 0.78rem;
-      font-weight: 700;
+      font-size: 0.86rem;
+      line-height: 1.35;
     }
+    .copy-preview strong { color: var(--text-primary); font-weight: 800; word-break: break-word; text-align: right; }
 
-    .copy-mode-btn.active {
-      color: white;
-      background: var(--purple-primary);
-      border-color: transparent;
-    }
+    .copy-options { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .copy-options span { color: var(--text-muted); font-size: 0.78rem; font-weight: 700; margin-right: 2px; }
+    .copy-mode-btn { padding: 8px 12px; color: var(--text-secondary); font-size: 0.78rem; font-weight: 700; }
+    .copy-mode-btn.active { color: white; background: var(--purple-primary); border-color: transparent; }
+    .copy-btn { width: 100%; padding: 13px 16px; font-size: 0.92rem; font-weight: 800; background: var(--glass-bg-strong); }
+    .copy-btn.copied { color: #06120a; background: var(--success); border-color: var(--success); transform: scale(0.99); }
 
-    .copy-btn {
-      width: 100%;
-      padding: 13px 16px;
-      font-size: 0.92rem;
-      font-weight: 800;
-      background: var(--glass-bg-strong);
-    }
-
-    .copy-btn.copied {
-      color: #06120a;
-      background: var(--success);
-      border-color: var(--success);
-      transform: scale(0.99);
-    }
-
-    .hint {
-      color: var(--text-muted);
-      font-size: 0.78rem;
-      line-height: 1.5;
-      margin-top: 14px;
-      text-align: center;
-    }
+    .hint { color: var(--text-muted); font-size: 0.78rem; line-height: 1.5; margin-top: 14px; text-align: center; }
 
     @media (max-width: 640px) {
-      body {
-        padding: 86px 16px 24px;
-        align-items: flex-start;
-      }
-
-      .theme-toggle {
-        top: 14px;
-        right: 14px;
-      }
-
-      .converter-card {
-        padding: 18px;
-        border-radius: 22px;
-      }
-
-      .card-header {
-        flex-direction: column;
-      }
-
-      .status-pill {
-        white-space: normal;
-      }
-
-      .direction-row {
-        grid-template-columns: 1fr;
-      }
+      body { padding: 86px 16px 24px; align-items: flex-start; }
+      .theme-toggle { top: 14px; right: 14px; }
+      .converter-card { padding: 18px; border-radius: 22px; }
+      .card-header { flex-direction: column; }
+      .status-pill { white-space: normal; }
+      .direction-row { grid-template-columns: 1fr; }
+      .copy-preview { align-items: flex-start; flex-direction: column; }
+      .copy-preview strong { text-align: left; }
     }
   </style>
 </head>
 <body>
   <div class="theme-toggle">
-    <button class="theme-btn" id="themeToggle" type="button" aria-label="Toggle light and dark mode">☾ Dark Mode</button>
+    <button class="theme-btn" id="themeToggle" type="button">☾ Dark Mode</button>
   </div>
 
   <main class="app-shell">
-    <section class="hero" aria-labelledby="pageTitle">
+    <section class="hero">
       <div class="eyebrow">Real-Time Conversion Tool</div>
-      <h1 id="pageTitle">Glass Unit Converter</h1>
+      <h1>Glass Unit Converter</h1>
       <p>Convert distance and temperature in either direction. Choose a direction, type into the active field, and copy either the result number or the full result with units.</p>
     </section>
 
-    <section class="converter-grid" aria-label="Unit converters">
+    <section class="converter-grid">
       <article class="converter-card" data-converter="distance">
         <div class="card-inner">
           <div class="card-header">
@@ -394,31 +206,25 @@
             <div class="status-pill" id="distanceStatus">Kilometers → Miles selected</div>
           </div>
 
-          <div class="direction-row" role="group" aria-label="Distance conversion direction">
+          <div class="direction-row">
             <button class="direction-btn active" type="button" data-direction="kmToMiles">Kilometers → Miles</button>
             <button class="direction-btn" type="button" data-direction="milesToKm">Miles → Kilometers</button>
           </div>
 
           <div class="fields">
             <div class="field-group active-input" data-field-wrapper="km">
-              <label for="kilometers">
-                <span id="kmLabel">Kilometers input</span>
-                <span class="active-label" id="kmActive">Current input</span>
-              </label>
+              <label for="kilometers"><span id="kmLabel">Kilometers input</span><span class="active-label" id="kmActive">Current input</span></label>
               <input id="kilometers" type="number" inputmode="decimal" placeholder="Enter kilometers" />
             </div>
-
             <div class="field-group" data-field-wrapper="miles">
-              <label for="miles">
-                <span id="milesLabel">Miles result</span>
-                <span class="active-label" id="milesActive" hidden>Current input</span>
-              </label>
+              <label for="miles"><span id="milesLabel">Miles result</span><span class="active-label" id="milesActive" hidden>Current input</span></label>
               <input id="miles" type="number" inputmode="decimal" placeholder="Miles result" readonly />
             </div>
           </div>
 
           <div class="copy-panel">
-            <div class="copy-options" role="group" aria-label="Distance copy format">
+            <div class="copy-preview"><span>Copy preview</span><strong id="distanceCopyPreview">Enter a value</strong></div>
+            <div class="copy-options">
               <span>Copy format:</span>
               <button class="copy-mode-btn active" type="button" data-copy-scope="distance" data-copy-mode="number">Number only</button>
               <button class="copy-mode-btn" type="button" data-copy-scope="distance" data-copy-mode="full">Full result + units</button>
@@ -438,31 +244,25 @@
             <div class="status-pill" id="temperatureStatus">Fahrenheit → Celsius selected</div>
           </div>
 
-          <div class="direction-row" role="group" aria-label="Temperature conversion direction">
+          <div class="direction-row">
             <button class="direction-btn active" type="button" data-direction="fahrenheitToCelsius">Fahrenheit → Celsius</button>
             <button class="direction-btn" type="button" data-direction="celsiusToFahrenheit">Celsius → Fahrenheit</button>
           </div>
 
           <div class="fields">
             <div class="field-group active-input" data-field-wrapper="fahrenheit">
-              <label for="fahrenheit">
-                <span id="fahrenheitLabel">Fahrenheit input</span>
-                <span class="active-label" id="fahrenheitActive">Current input</span>
-              </label>
+              <label for="fahrenheit"><span id="fahrenheitLabel">Fahrenheit input</span><span class="active-label" id="fahrenheitActive">Current input</span></label>
               <input id="fahrenheit" type="number" inputmode="decimal" placeholder="Enter Fahrenheit" />
             </div>
-
             <div class="field-group" data-field-wrapper="celsius">
-              <label for="celsius">
-                <span id="celsiusLabel">Celsius result</span>
-                <span class="active-label" id="celsiusActive" hidden>Current input</span>
-              </label>
+              <label for="celsius"><span id="celsiusLabel">Celsius result</span><span class="active-label" id="celsiusActive" hidden>Current input</span></label>
               <input id="celsius" type="number" inputmode="decimal" placeholder="Celsius result" readonly />
             </div>
           </div>
 
           <div class="copy-panel">
-            <div class="copy-options" role="group" aria-label="Temperature copy format">
+            <div class="copy-preview"><span>Copy preview</span><strong id="temperatureCopyPreview">Enter a value</strong></div>
+            <div class="copy-options">
               <span>Copy format:</span>
               <button class="copy-mode-btn active" type="button" data-copy-scope="temperature" data-copy-mode="number">Number only</button>
               <button class="copy-mode-btn" type="button" data-copy-scope="temperature" data-copy-mode="full">Full result + units</button>
@@ -492,6 +292,8 @@
       celsius: document.getElementById("celsius"),
       distanceStatus: document.getElementById("distanceStatus"),
       temperatureStatus: document.getElementById("temperatureStatus"),
+      distanceCopyPreview: document.getElementById("distanceCopyPreview"),
+      temperatureCopyPreview: document.getElementById("temperatureCopyPreview"),
       kmLabel: document.getElementById("kmLabel"),
       milesLabel: document.getElementById("milesLabel"),
       fahrenheitLabel: document.getElementById("fahrenheitLabel"),
@@ -512,27 +314,37 @@
 
     function setFieldMode(inputElement, isInput) {
       inputElement.readOnly = !isInput;
-      if (!isInput) {
-        inputElement.setAttribute("aria-readonly", "true");
-      } else {
-        inputElement.removeAttribute("aria-readonly");
-      }
     }
 
     function setActiveWrapper(converterType, activeName) {
-      document
-        .querySelectorAll(`[data-converter="${converterType}"] [data-field-wrapper]`)
-        .forEach((wrapper) => {
-          wrapper.classList.toggle("active-input", wrapper.dataset.fieldWrapper === activeName);
-        });
+      document.querySelectorAll(`[data-converter="${converterType}"] [data-field-wrapper]`).forEach((wrapper) => {
+        wrapper.classList.toggle("active-input", wrapper.dataset.fieldWrapper === activeName);
+      });
     }
 
     function updateDirectionButtons(converterType, activeDirection) {
-      document
-        .querySelectorAll(`[data-converter="${converterType}"] .direction-btn`)
-        .forEach((button) => {
-          button.classList.toggle("active", button.dataset.direction === activeDirection);
-        });
+      document.querySelectorAll(`[data-converter="${converterType}"] .direction-btn`).forEach((button) => {
+        button.classList.toggle("active", button.dataset.direction === activeDirection);
+      });
+    }
+
+    function getCopyText(type) {
+      if (type === "distance") {
+        const resultValue = state.distanceDirection === "kmToMiles" ? elements.miles.value : elements.kilometers.value;
+        const unit = state.distanceDirection === "kmToMiles" ? "miles" : "kilometers";
+        if (!resultValue) return "";
+        return state.distanceCopyMode === "number" ? resultValue : `${resultValue} ${unit}`;
+      }
+
+      const resultValue = state.temperatureDirection === "fahrenheitToCelsius" ? elements.celsius.value : elements.fahrenheit.value;
+      const unit = state.temperatureDirection === "fahrenheitToCelsius" ? "°C" : "°F";
+      if (!resultValue) return "";
+      return state.temperatureCopyMode === "number" ? resultValue : `${resultValue}${unit}`;
+    }
+
+    function updateCopyPreviews() {
+      elements.distanceCopyPreview.textContent = getCopyText("distance") || "Enter a value";
+      elements.temperatureCopyPreview.textContent = getCopyText("temperature") || "Enter a value";
     }
 
     function convertDistance() {
@@ -543,6 +355,7 @@
         const miles = Number.parseFloat(elements.miles.value);
         elements.kilometers.value = elements.miles.value === "" ? "" : formatResult(miles * MILES_TO_KM);
       }
+      updateCopyPreviews();
     }
 
     function convertTemperature() {
@@ -553,6 +366,7 @@
         const celsius = Number.parseFloat(elements.celsius.value);
         elements.fahrenheit.value = elements.celsius.value === "" ? "" : formatResult((celsius * 9 / 5) + 32);
       }
+      updateCopyPreviews();
     }
 
     function setDistanceDirection(direction) {
@@ -613,20 +427,6 @@
       }
     }
 
-    function getCopyText(type) {
-      if (type === "distance") {
-        const resultValue = state.distanceDirection === "kmToMiles" ? elements.miles.value : elements.kilometers.value;
-        const unit = state.distanceDirection === "kmToMiles" ? "miles" : "kilometers";
-        if (!resultValue) return "";
-        return state.distanceCopyMode === "number" ? resultValue : `${resultValue} ${unit}`;
-      }
-
-      const resultValue = state.temperatureDirection === "fahrenheitToCelsius" ? elements.celsius.value : elements.fahrenheit.value;
-      const unit = state.temperatureDirection === "fahrenheitToCelsius" ? "°C" : "°F";
-      if (!resultValue) return "";
-      return state.temperatureCopyMode === "number" ? resultValue : `${resultValue}${unit}`;
-    }
-
     async function copyResult(button, type) {
       const originalText = button.textContent;
       const textToCopy = getCopyText(type);
@@ -643,7 +443,6 @@
 
       try {
         await navigator.clipboard.writeText(textToCopy);
-        button.textContent = "Copied!";
       } catch (error) {
         const fallback = document.createElement("textarea");
         fallback.value = textToCopy;
@@ -651,9 +450,9 @@
         fallback.select();
         document.execCommand("copy");
         document.body.removeChild(fallback);
-        button.textContent = "Copied!";
       }
 
+      button.textContent = "Copied!";
       button.classList.add("copied");
       setTimeout(() => {
         button.textContent = originalText;
@@ -668,11 +467,11 @@
         state.temperatureCopyMode = mode;
       }
 
-      document
-        .querySelectorAll(`[data-copy-scope="${scope}"]`)
-        .forEach((button) => {
-          button.classList.toggle("active", button.dataset.copyMode === mode);
-        });
+      document.querySelectorAll(`[data-copy-scope="${scope}"]`).forEach((button) => {
+        button.classList.toggle("active", button.dataset.copyMode === mode);
+      });
+
+      updateCopyPreviews();
     }
 
     elements.themeToggle.addEventListener("click", () => {
@@ -711,6 +510,7 @@
 
     setDistanceDirection("kmToMiles");
     setTemperatureDirection("fahrenheitToCelsius");
+    updateCopyPreviews();
   </script>
 </body>
 </html>
